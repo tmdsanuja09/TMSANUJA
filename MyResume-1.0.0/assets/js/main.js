@@ -111,22 +111,60 @@
   new PureCounter();
 
   /**
-   * Animate the skills items on reveal
-   */
-  let skillsAnimation = document.querySelectorAll('.skills-animation');
-  skillsAnimation.forEach((item) => {
-    new Waypoint({
-      element: item,
-      offset: '80%',
-      handler: function(direction) {
-        let progress = item.querySelectorAll('.progress .progress-bar');
-        progress.forEach(el => {
-          el.style.width = el.getAttribute('aria-valuenow') + '%';
-        });
-      }
+  // Add this JavaScript to enhance the skill badges section
+// Place it in your main.js file or add it before the closing </body> tag */
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize AOS animations for skill badges
+  const skillBadges = document.querySelectorAll('.skill-badge');
+  
+  // Add staggered animation when scrolling to the skills section
+  const skillsSection = document.querySelector('#skills');
+  
+  if (skillsSection) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Add the animation classes to each skill badge with delay
+          skillBadges.forEach((badge, index) => {
+            setTimeout(() => {
+              badge.classList.add('aos-animate');
+            }, index * 100);
+          });
+        }
+      });
+    }, {
+      threshold: 0.2
+    });
+    
+    observer.observe(skillsSection);
+  }
+  
+  // Optional: Add hover effect that changes the dot colors
+  skillBadges.forEach(badge => {
+    badge.addEventListener('mouseenter', function() {
+      const dots = this.querySelectorAll('.dot');
+      dots.forEach((dot, index) => {
+        setTimeout(() => {
+          dot.style.transition = 'background-color 0.3s ease';
+          dot.style.backgroundColor = dot.classList.contains('active') ? 
+            getComputedStyle(this.querySelector('.skill-level')).color : 
+            '#e9ecef';
+        }, index * 50);
+      });
+    });
+    
+    badge.addEventListener('mouseleave', function() {
+      const dots = this.querySelectorAll('.dot');
+      dots.forEach(dot => {
+        dot.style.transition = 'background-color 0.3s ease';
+        dot.style.backgroundColor = dot.classList.contains('active') ? 
+          getComputedStyle(this.querySelector('.skill-level')).color : 
+          '#e9ecef';
+      });
     });
   });
-
+});
   /**
    * Initiate glightbox
    */
